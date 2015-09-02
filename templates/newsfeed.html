@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+NEWSFEED
+</title>
+<meta charset="utf-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="assets/css/bootstrap.min.css"> 
+  	<script type="text/javascript" src="assets/js/jquery-2.1.4.min.js"></script>
+  	<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+  	<link href="assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
+  	<link href="assets/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+  	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+ 	<div class="row">
+        <!--
+          <h1 class="text-center">Team gallary</h1>
+          -->
+          <a class="btn btn-success " role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" >
+            <h1>
+              Share
+            </h1>
+          </a>
+
+          <div class="collapse" id="collapseExample">
+            <div class="well greybg">
+            	<h1>Form</h1>
+            </div>
+          </div>
+
+	</div>
+  {%for a in news%}
+    <h2>{{a[0]}} has shared this post at {{a.time}}</h2>
+    <p>{{a[1]}}</p><br>
+    {{a[2]}}
+
+  {%endfor%}
+
+</body>
+</html>
