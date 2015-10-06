@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Product Name</title>
+	<title>Query Answers</title>
+	<meta charset="utf-8">
   	<meta http-equiv="X-UA-Compatible" content="IE=edge">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<link rel="stylesheet" href="assets/css/bootstrap.min.css"> 
@@ -66,50 +67,24 @@
             		</div>
           			</div>
 	</div>
-	<div class="row" >
-		<div class ="col-md-4">
-			<img src="/show?pid={{pid}}" class="img-responsive img-thumbnail">
-		</div>
-		<div class="col-md-8">
-			<div class="row">
-				Name
-			</div>
-			<div class="row">
-				<div class="row">
-					{{cursor.info}}
-				</div>
-				<div class="row">
-					Price
-				</div>
-				<div class="row">
-					<button>
-						Add to cart
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		Detail Descriptio
-	</div>
 	<div class="row">
 		<div class="container">
 		    <form class="form-signin col-sm-4 col-sm-offset-4" method="POST">
 		        <h2 class="form-signin-heading text-center" style="color:yellow">
-		        	Your Query
+		        	Your Answer
 		        </h2>
 		        <div class="form-group">
 			        <label class="sr-only">
-			        	Query
+			        	Answer
 			        </label>
 			        <div >
-			        	<textarea class="form-control" placeholder="Type your Query" required name="query"></textarea> 
+			        	<textarea class="form-control" placeholder="Type your Answer" required name="answer"></textarea> 
 			        </div>
 			    </div>
 			    <div class="row">
 				    <div>    
 				        <button name="submit" class="btn btn-lg btn-info btn-block" type="submit">
-				        	Submit Query
+				        	Submit answer
 				        </button>
 				    </div>
 				</div>
@@ -118,13 +93,10 @@
 	</div>
 	<div class="row">
 		{%for c in cursorQuery%}
-			{%if c.product_id.key()==condition%}
-			<a href="/answer?qid={{c.key().id()}}">{{c.question}}</a>
+			{%if c.question_id.key()==condition%}
+			<p>{{c.answer}}</p>
 			{%endif%}
 		{%endfor%}
-	</div>
-	<div class="row">
-		recommendation
 	</div>
 
 </div>

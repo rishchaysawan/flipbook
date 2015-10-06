@@ -79,7 +79,7 @@ class Order(db.Model):
     address=db.StringProperty(required=True)
 
 
-class cart(db.Model):
+class Cart(db.Model):
     product_id=db.ReferenceProperty(Products)
     email=db.StringProperty(required=True)
     quantity=db.IntegerProperty(required=True)
@@ -92,13 +92,13 @@ class Rating(db.Model):
     rating=db.IntegerProperty(required=True)
 
 
-class bool_rating(db.Model):
+class Bool_rating(db.Model):
     email=db.StringProperty(required=True)
     product_id=db.ReferenceProperty(Products)
     rating=db.IntegerProperty(required=True)
     review=db.StringProperty(required=True)
 
-class query(db.Model):
+class Query(db.Model):
     question=db.StringProperty(required=True)
     product_id=db.ReferenceProperty(Products)
 
@@ -106,7 +106,7 @@ class person(db.Model):
     email=db.StringProperty(required=True)
     friend_email=db.StringProperty(required=True)
 
-class share(db.Model):
+class Share(db.Model):
     email=db.StringProperty(required=True)
     shared_post=db.StringProperty(required=True)
     time=db.DateTimeProperty(auto_now_add=True) 
@@ -115,6 +115,10 @@ class share(db.Model):
 class notification(db.Model):
     product_id=db.ReferenceProperty(Products)
     notification_product=db.StringProperty(required=True)          
+
+class Answer(db.Model):
+    answer=db.StringProperty(required=True)
+    question_id=db.ReferenceProperty(Query)
 
 class Handler(webapp2.RequestHandler):
     def write(self,*a,**kw):
@@ -179,12 +183,15 @@ class Show(Handler):
     def write_form(self):
         self.render("sellers.html")
     def get(self):
-        cursor=db.GqlQuery("Select * from Customer where name='admin5' ")
+        #cursor=db.GqlQuery("Select * from Customer where name='admin5' ")
+        product_id=self.request.get('pid')
+        c=Products.get_by_id(int(product_id))
         #cursor=db.GqlQuery("Select * from Products where category='temp'")
-        c=cursor.get()
+        #c=cursor.get()
         self.response.headers['Content-Type'] = 'image/jpg'
-        self.write(c.profilepic)
-        #self.write(c.image)
+        #self.write(c.profilepic)
+        self.write(c.image)
+
 
 class NewsHandler(Handler):
     def get(self):
@@ -262,9 +269,23 @@ class ProductHandler(Handler):
     def get(self):
         product_id=self.request.get('pid')
         cursor=Products.get_by_id(int(product_id))
+
+        cursorQuery=db.GqlQuery("SELECT * FROM Query")
         #self.response.headers['Content-Type']='image/png'
         #self.response.headers.add_header('Content-Type','image/png')
-        self.render("product.html",cursor=cursor)
+        image=cursor.image
+        self.render("product.html",pid=product_id,cursor=cursor,cursorQuery=cursorQuery,condition=cursor.key(),image=image)
+        #temp=self.request.headers.get('Content-Type')
+        #self.write(temp)
+    def post(self):
+        query=self.request.get('query')
+        product_id=self.request.get('pid')
+        product=Products.get_by_id(int(product_id))
+        #temp=query+product_id
+        #self.write(temp)
+        q=Query(question=query,product_id=product.key())
+        q.put()
+        self.redirect('/')
 
 class BackendHandler(Handler):
     def get(self):
@@ -276,8 +297,23 @@ class BackendHandler(Handler):
         #token=self.request.get('token')
         #self.render("backend.html",token=token)   
 
+class AnswerHandler(Handler):
+    def get(self):
+        qid=self.request.get('qid')
+        cursor=Query.get_by_id(int(qid))
+        cursorQuery=db.GqlQuery("SELECT * FROM Answer")
+        self.render("answer.html",cursorQuery=cursorQuery,condition=cursor.key())
+
+    def post(self):
+        answer=self.request.get('answer')
+        question_id=self.request.get('qid')
+        query=Query.get_by_id(int(question_id))
+        a=Answer(answer=answer,question_id=query.key())
+        a.put()
+        self.redirect("/")
+    
 app = webapp2.WSGIApplication([
     ('/', MainHandler),('/login',LoginHandler),('/loginEmail',LoginWithEmail),
     ('/signup',SignupHandler),('/newsfeed',NewsHandler),('/sellers',Sellers),('/show',Show),
-    ('/test',TestHandler),('/backend',BackendHandler),('/product',ProductHandler)
+    ('/test',TestHandler),('/backend',BackendHandler),('/product',ProductHandler),('/answer',AnswerHandler)
 ], debug=True)
