@@ -13,6 +13,8 @@ handlers:
   static_files: favicon.ico
   upload: favicon\.ico
 
+- url: /_ah/login_required
+  script: do_openid_login.app
 - url: .*
   script: main.app
 

@@ -33,12 +33,20 @@ NEWSFEED
           </div>
 
 	</div>
+  {{error}}
   {%for a in news%}
     <h2>{{a[0]}} has shared this post at {{a.time}}</h2>
     <p>{{a[1]}}</p><br>
     {{a[2]}}
 
   {%endfor%}
+
+  {%for f in youmayknow%}
+  <h2>{{f.name}}</h2>
+  <button>follow</button>
+  <br>
+
+  {% endfor %}
 
 </body>
 </html>

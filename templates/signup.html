@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Login</title>
@@ -13,7 +14,7 @@
 </head>
 <body>
 	<div class="container">
-	    <form class="form-signin form-horizontal col-sm-4 col-sm-offset-4" method="POST">
+	    <form class="form-signin form-horizontal col-sm-4 col-sm-offset-4" method="POST" enctype="multipart/form-data">
 	        <h2 class="form-signin-heading text-center" style="color:yellow">
 	        	Become A Member
 	        </h2>
@@ -50,6 +51,22 @@
 		        	<input type="email" name="email" class="form-control" placeholder="Your Mail" required value="{{mail}}" >
 		        </div>
 		        {{userExists}}
+		    </div>
+		    <div class="form-group">
+		        <label class="sr-only">
+		        	Institution
+		        </label>
+		        <div >
+		        	<input type="text" name="institution" class="form-control" placeholder="Your Institution" required value="{{institution}}" >
+		        </div>
+		    </div>
+		    <div class="form-group">
+		        <label class="sr-only">
+		        	Profile Picture
+		        </label>
+		        <div >
+		        	<input type="file" name="fileToUpload">
+		        </div>
 		    </div>
 		    <div class="row">
 			    <div>    
