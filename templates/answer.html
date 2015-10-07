@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Query Answers</title>
+	<meta charset="utf-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="assets/css/bootstrap.min.css"> 
+  	<script type="text/javascript" src="assets/js/jquery-2.1.4.min.js"></script>
+  	<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+  	<link href="assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
+  	<link href="assets/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+  	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="container">
+	<div class="row">
+		<div class="col-md-1">
+			Logo
+		</div>
+		<div class="col-md-7">
+			<form>
+				<input type="text" name="search" placeholder="Search Flipbook">
+			</form>
+		</div>
+		<div class="col-md-4">
+			<div class="col-md-4">
+				<a href="login">login/signup</a>
+			</div>
+			<div class="col-md-4">
+				notify
+			</div>
+			<div class="col-md-4">
+				cart
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<nav class="navbar navbar-default navbar-inverse" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#collapse">
+					<span class="sr-only">
+					  Toggle only
+					</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					</button>
+				</div>
+				<div class="collapse navbar-collapse" id="collapse">
+					<ul class="nav navbar-nav">
+						<li ><a class="btn " role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" >catagory</a></li>
+						<li><a class="btn " role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">catagory</a></li>
+						<li><a class="btn " role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">catagory</a></li>
+						<li><a class="btn " role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">catagory</a></li>
+						<li><a class="btn " role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">catagory</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div>
+	<div class="row">
+		<div class="collapse" id="collapseExample">
+            		<div class="well greybg">
+            			<h1>Form</h1>
+            		</div>
+          			</div>
+	</div>
+	<div class="row">
+		<div class="container">
+		    <form class="form-signin col-sm-4 col-sm-offset-4" method="POST">
+		        <h2 class="form-signin-heading text-center" style="color:yellow">
+		        	Your Answer
+		        </h2>
+		        <div class="form-group">
+			        <label class="sr-only">
+			        	Answer
+			        </label>
+			        <div >
+			        	<textarea class="form-control" placeholder="Type your Answer" required name="answer"></textarea> 
+			        </div>
+			    </div>
+			    <div class="row">
+				    <div>    
+				        <button name="submit" class="btn btn-lg btn-info btn-block" type="submit">
+				        	Submit answer
+				        </button>
+				    </div>
+				</div>
+		      </form> 
+		</div>
+	</div>
+	<div class="row">
+		{%for c in cursorQuery%}
+			{%if c.question_id.key()==condition%}
+			<p>{{c.answer}}</p>
+			{%endif%}
+		{%endfor%}
+	</div>
+
+</div>
+</body>
+</html>
