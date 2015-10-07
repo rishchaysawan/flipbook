@@ -1,82 +1,133 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-	<title>FLIPBOOK</title>
-	<meta charset="utf-8">
-  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-  	<meta name="viewport" content="width=device-width, initial-scale=1">
-  	<link rel="stylesheet" href="assets/css/bootstrap.min.css"> 
-  	<script type="text/javascript" src="assets/js/jquery-2.1.4.min.js"></script>
-  	<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-  	<link href="assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
-  	<link href="assets/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
-  	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+  <title>FLIPBOOK</title>
+  <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css"> 
+    <script type="text/javascript" src="assets/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+    <link href="assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div class="container">
-	<div class="row">
-		<div class="col-md-1">
-			Logo
-		</div>
-		<div class="col-md-7">
-			<form>
-				<input type="text" name="search" placeholder="Search Flipbook">
-			</form>
-		</div>
-		<div class="col-md-4">
-			<div class="col-md-3">
-				<a href="login">login/signup</a>
-			</div>
-			<div class="col-md-3">
-				<a href="/newsfeed">newsfeed</a>
-			</div>
-			<div class="col-md-3">
-				notify
-			</div>
-			<div class="col-md-3">
-				cart
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<nav class="navbar navbar-default navbar-inverse" role="navigation">
-			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#collapse">
-					<span class="sr-only">
-					  Toggle only
-					</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					</button>
-				</div>
-				<div class="collapse navbar-collapse" id="collapse">
-					<ul class="nav navbar-nav">
-						<li ><a class="btn " role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" >catagory</a></li>
-						<li><a class="btn " role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">catagory</a></li>
-						<li><a class="btn " role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">catagory</a></li>
-						<li><a class="btn " role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">catagory</a></li>
-						<li><a class="btn " role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">catagory</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-	</div>
-	<div class="row">
-		<div class="collapse" id="collapseExample">
-            		<div class="well greybg">
-            			<h1>Form</h1>
-            		</div>
-          			</div>
-	</div>
-	<div class="row" >
-		<div class="col-md-2">
-			no idea
-		</div>
-		<div class="col-md-8">
-			<div id="artCarousel" class="carousel slide">
+  <div class="row">
+    <div class="col-md-1">
+      Logo
+    </div>
+    <div class="col-md-7">
+
+      <form  method="POST" >
+        <input type="text" name="search" placeholder="Search Flipbook">
+        <button name="submit"  type="submit">
+                Submit
+              </button>
+      </form>
+    </div>
+    <div class="col-md-4">
+      <div class="col-md-3">
+        <a href="login">login/signup</a>
+      </div>
+      <div class="col-md-3">
+        <a href="/newsfeed">newsfeed</a>
+      </div>
+      <div class="col-md-3">
+        notify
+      </div>
+      <div class="col-md-3">
+        cart
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <nav class="navbar navbar-default navbar-inverse" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#collapse">
+          <span class="sr-only">
+            Toggle only
+          </span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="collapse navbar-collapse" id="collapse">
+          <ul class="nav navbar-nav">
+            <li ><a class="btn " role="button" data-toggle="collapse" href="#collapseExample1" aria-expanded="false" aria-controls="collapseExample" >ELECTRONICS</a></li>
+            <li><a class="btn " role="button" data-toggle="collapse" href="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">MEN</a></li>
+            <li><a class="btn " role="button" data-toggle="collapse" href="#collapseExample3" aria-expanded="false" aria-controls="collapseExample3">HOME</a></li>
+            <li><a class="btn " role="button" data-toggle="collapse" href="#collapseExample4" aria-expanded="false" aria-controls="collapseExample4">FURNITURE</a></li>
+            <li><a class="btn " role="button" data-toggle="collapse" href="#collapseExample5" aria-expanded="false" aria-controls="collapseExample5">WOMEN</a></li>
+            <li><a class="btn " role="button" data-toggle="collapse" href="#collapseExample6" aria-expanded="false" aria-controls="collapseExample6">BOOKS AND MEDIA</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="collapse" id="collapseExample1">
+                <div class="well greybg">
+                      <h5><a href="newsfeed?subcategory=Mobile">Mobile</a></h5>
+                  <h5><a href="newsfeed?subcategory=Camera">Camera</a></h5>
+                  <h5><a href="newsfeed?subcategory=TV">TV</a></h5>
+                  <h5><a href="newsfeed?subcategory=Laptop">Laptop</a></h5>
+                  <h5><a href="newsfeed?subcategory=Printer">Printer</a></h5>
+                </div>
+                </div>
+
+        <div class="collapse" id="collapseExample2">
+                <div class="well greybg">
+                  <h5><a href="newsfeed?subcategory=Footwear">Clothing</a></h5>
+                  <h5><a href="newsfeed?subcategory=Footwear">Footwear</a></h5>
+                  <h5><a href="newsfeed?subcategory=Bags">Bags</a></h5>
+                  <h5><a href="newsfeed?subcategory=Sunglasses">Sunglasses</a></h5>
+                  <h5><a href="newsfeed?subcategory=watch">watch</a></h5>
+
+                </div>
+                </div>
+                
+        <div class="collapse" id="collapseExample3">
+                <div class="well greybg">
+                  <h5><a href="newsfeed?subcategory=Bed">Bed</a></h5>
+                  <h5><a href="newsfeed?subcategory=Sofa">Sofa</a></h5>
+                </div>
+                </div>
+                
+        <div class="collapse" id="collapseExample4">
+                <div class="well greybg">
+                  <h5><a href="newsfeed?subcategory=Clocks">Clocks</a></h5>
+                  <h5><a href="newsfeed?subcategory=Bedsheets">Bedsheets</a></h5>
+                  <h5><a href="newsfeed?subcategory=Cooker">Cooker</a></h5>
+                  <h5><a href="newsfeed?subcategory=Heaters">Heaters</a></h5>
+                  <h5><a href="newsfeed?subcategory=Microwave Ovens">Microwave Ovens</a></h5>
+                </div>
+                </div>
+                
+        <div class="collapse" id="collapseExample5">
+                <div class="well greybg">
+                  <h3>Women</h3>
+                </div>
+                </div>
+
+        <div class="collapse" id="collapseExample6">
+                <div class="well greybg">
+                  <h3>BOOKS & MEDIA</h3>
+                </div>
+                </div>
+                
+
+  </div>
+
+  <div class="row" >
+    <div class="col-md-2">
+      no idea
+    </div>
+    <div class="col-md-8">
+      <div id="artCarousel" class="carousel slide">
               <ol class="carousel-indicators">
                 <li data-target="#artCarousel" data-slide-to="0" class="active"></li>
                 <li data-target="#artCarousel" data-slide-to="1" ></li>
@@ -108,22 +159,25 @@
                 <span class="sr-only">Next</span>
               </a>
             </div>
-		</div>
-		<div class="col-md-2">
-			recommendation
-		</div>
-	</div>
-	<div class="row">
-		No idea
-	</div>
-	<div class="footer">
-		<div class="col-md-8">
-			contacts
-		</div>
-		<div class="col-md-4">
-			map
-		</div>
-	</div>
+    </div>
+    <div class="col-md-2">
+      <h3>Recommendation</h3>
+      <br>
+      <h4>{{message}}</h4>
+
+    </div>
+  </div>
+  <div class="row">
+    No idea
+  </div>
+  <div class="footer">
+    <div class="col-md-8">
+      contacts
+    </div>
+    <div class="col-md-4">
+      map
+    </div>
+  </div>
 
 </div>
 </body>
