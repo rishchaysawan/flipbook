@@ -108,7 +108,11 @@ class person(db.Model):
     email=db.StringProperty(required=True)
     friend_email=db.StringProperty(required=True)
 
+<<<<<<< HEAD
 class share(db.Model):
+=======
+class Share(db.Model):
+>>>>>>> 33b2286dec0570da74fb5ef0f20b18fffe760785
     email=db.StringProperty(required=True)
     shared_post=db.StringProperty(required=True)
     time=db.DateTimeProperty(auto_now_add=True) 
@@ -501,6 +505,7 @@ class ProductHandler(Handler):
         q.put()
         self.redirect('/')
 
+<<<<<<< HEAD
 class showProducts(Handler):
     def get(self):
         sublist=[];
@@ -515,6 +520,8 @@ class showProducts(Handler):
 
         self.render("showProducts.html",sublist=sublist);            
 
+=======
+>>>>>>> 33b2286dec0570da74fb5ef0f20b18fffe760785
 class BackendHandler(Handler):
     def get(self):
         token=self.request.get('token')
@@ -544,5 +551,9 @@ app = webapp2.WSGIApplication([
     ('/', MainHandler),('/login',LoginHandler),('/loginEmail',LoginWithEmail),
     ('/signup',SignupHandler),('/newsfeed',NewsHandler),('/sellers',Sellers),('/show',Show),
     ('/test',TestHandler),('/backend',BackendHandler),('/product',ProductHandler),('/sell',SellHandler),
+<<<<<<< HEAD
     ('/answer',AnswerHandler),('/share',ShareHandler),('/showproducts',showProducts),
+=======
+    ('/answer',AnswerHandler),('/share',ShareHandler)
+>>>>>>> 33b2286dec0570da74fb5ef0f20b18fffe760785
 ], debug=True)
