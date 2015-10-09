@@ -140,6 +140,7 @@ NEWSFEED
   {% if post %}
     <div>
     <h3>Your friend {{post.email}} wants to sell something</h3>
+    
     <h3>{{post.sell_post}}<h3><br>
     <h4>price {{post.price}}</h4><br>
     <h4>quantity {{post.quantity}}</h4>
@@ -153,7 +154,11 @@ NEWSFEED
   <h3> People You May know</h3>
  {%for f in youmayknow%}
   <div>
+    <div class ="col-md-4">
+      <img src="/showfriends?pid={{f.key().id()}}" class="img-responsive img-thumbnail">
+    </div>
   <h2>{{f.name}}</h2><br>
+</div>
   
   <form method="post">
    <input type="submit" name="submit" value="follow {{f.email}}"> 

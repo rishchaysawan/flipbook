@@ -6,6 +6,9 @@
 {%for c in sublist%}
 
 	<div>
+	<div >
+			<img src="/show?pid={{c.key().id()}}" class="img-responsive img-thumbnail">
+		</div>	
 	<a href="/product?pid={{c.key().id()}} "><h2>{{c.name}}<h2></a>	
 	</div>
 

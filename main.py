@@ -108,11 +108,8 @@ class person(db.Model):
     email=db.StringProperty(required=True)
     friend_email=db.StringProperty(required=True)
 
-<<<<<<< HEAD
 class share(db.Model):
-=======
-class Share(db.Model):
->>>>>>> 33b2286dec0570da74fb5ef0f20b18fffe760785
+
     email=db.StringProperty(required=True)
     shared_post=db.StringProperty(required=True)
     time=db.DateTimeProperty(auto_now_add=True) 
@@ -327,6 +324,15 @@ class Show(Handler):
         c=Products.get_by_id(int(product_id))
         self.response.headers['Content-Type'] = 'image/jpg'
         self.write(c.image)
+
+class ShowFriends(Handler):
+    def write_form(self):
+        self.render("sellers.html")
+    def get(self):
+        product_id=self.request.get('pid')
+        c=Customer.get_by_id(int(product_id))
+        self.response.headers['Content-Type'] = 'image/jpg'
+        self.write(c.image)        
 
 
 class NewsHandler(Handler):
@@ -551,5 +557,5 @@ app = webapp2.WSGIApplication([
     ('/signup',SignupHandler),('/newsfeed',NewsHandler),('/sellers',Sellers),('/show',Show),
     ('/test',TestHandler),('/backend',BackendHandler),('/product',ProductHandler),('/sell',SellHandler),
 
-    ('/answer',AnswerHandler),('/share',ShareHandler),('/showproducts',showProducts),
+    ('/answer',AnswerHandler),('/share',ShareHandler),('/showfriends,ShowFriends',ShareHandler),('/showproducts',showProducts),
 ], debug=True)
