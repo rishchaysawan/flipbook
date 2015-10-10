@@ -36,7 +36,7 @@ NEWSFEED
             <div class="well greybg">
               <form class="form-signin form-horizontal col-sm-4 col-sm-offset-4" action="/share" method="POST" enctype="multipart/form-data">
           <h2 class="form-signin-heading text-center" style="color:Red">
-            Share Product with friends 
+            Share with friends 
           </h2>
          
 
@@ -55,8 +55,8 @@ NEWSFEED
               Image
             </label>
             <div >
-              <input type="file" name="fileToUpload">
-                   <input type="submit" value="Upload Image" name="submit">
+              <input type="file" name="fileToUpload" class="form-control" required value="">
+                   <input type="submit" value="Share post" name="submit">
             </div>
         </div>
         
@@ -111,8 +111,8 @@ NEWSFEED
               Image
             </label>
             <div >
-              <input type="file" name="fileToUpload">
-                   <input type="submit" value="Upload Image" name="submit">
+              <input type="file" name="fileToUpload"  class="form-control" required value="">
+                   <input type="submit" value="Upload Product" name="submit">
             </div>
         </div>
         
@@ -126,24 +126,33 @@ NEWSFEED
 
   <h3>{{error}}</h3>
 
+<p><strong> your friends has posted --</strong></p>
+
   {%for post in friendspost%}
     <div>
-    <h2>{{post.email}} has shared this post at {{post.time}}</h2>
+    <img src="/friendpic?eid={{post.email}}" class="img-responsive img-thumbnail">
+    <h2>{{post.name}} has shared this post at {{post.time}}</h2>
     <p>{{post.shared_post}}</p><br>
+    <img src="/showsharedposts?pid={{post.key().id()}}" class="img-responsive img-thumbnail">
+
     </div>
 
   {%endfor%}
+
+ <p><strong> your friends want to sell --</strong></p>
 
   {%if friendssell%}
 
   {%for post in friendssell%}
   {% if post %}
     <div>
-    <h3>Your friend {{post.email}} wants to sell something</h3>
+    <img src="/friendpic?eid={{post.email}}" class="img-responsive img-thumbnail">
+    <h3>Your friend {{post.name}} wants to sell something</h3>
     
     <h3>{{post.sell_post}}<h3><br>
     <h4>price {{post.price}}</h4><br>
     <h4>quantity {{post.quantity}}</h4>
+    <img src="/showsellposts?pid={{post.key().id()}}" class="img-responsive img-thumbnail">
     </div>
   
   {%endif%}
