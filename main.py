@@ -7,6 +7,7 @@ import random
 import string
 import urllib2
 import json
+from time import gmtime, strftime
 
 from google.appengine.ext import db
 from google.appengine.api import urlfetch
@@ -108,22 +109,28 @@ class person(db.Model):
     email=db.StringProperty(required=True)
     friend_email=db.StringProperty(required=True)
 
-class Share(db.Model):
+class share(db.Model):
+
     email=db.StringProperty(required=True)
+    name=db.StringProperty(required=True)
+    profilepic=db.BlobProperty(required=True)
     shared_post=db.StringProperty(required=True)
     time=db.DateTimeProperty(auto_now_add=True) 
     shared_image=db.BlobProperty()
 
 class sell(db.Model):
+
     email=db.StringProperty(required=True)
+    name=db.StringProperty(required=True)
+    profilepic=db.BlobProperty(required=True)
     sell_post=db.StringProperty(required=True)
     price=db.StringProperty(required=True)
     quantity=db.StringProperty(required=True)
     sell_image=db.BlobProperty()   
 
-class notification(db.Model):
-    product_id=db.ReferenceProperty(Products)
-    notification_product=db.StringProperty(required=True)          
+class lastchecknotify(db.Model):
+    email=db.StringProperty(required=True)        
+    time=db.DateTimeProperty(auto_now_add=True)
 
 class Answer(db.Model):
     answer=db.StringProperty(required=True)
@@ -249,7 +256,7 @@ class LoginWithEmail(Handler):
                 user_id=str(user_id)
                 id_to_send=make_secure_val(user_id)
                 self.response.headers.add_header('Set-Cookie','user_id=%s'%id_to_send)
-                self.redirect("/newsfeed")
+                self.redirect("/")
         else:
             password=""
             self.write_form(username,password,"User Not Exists")
@@ -274,18 +281,57 @@ class Sellers(Handler):
         self.redirect('/')
 
 class Show(Handler):
-    def write_form(self):
-        self.render("sellers.html")
+    
     def get(self):
         product_id=self.request.get('pid')
         c=Products.get_by_id(int(product_id))
         self.response.headers['Content-Type'] = 'image/jpg'
         self.write(c.image)
 
+class ShowFriends(Handler):
+    
+    def get(self):
+        product_id=self.request.get('pid')
+        c=Customer.get_by_id(int(product_id))
+        self.response.headers['Content-Type'] = 'image/jpg'
+        self.write(c.profilepic)        
+
+class FriendPic(Handler):
+    
+    def get(self):
+        emailid=self.request.get('eid')
+        cursor=db.GqlQuery("select * from Customer where email ='%s'" %emailid)
+
+        for c in cursor:
+            self.response.headers['Content-Type'] = 'image/jpg'
+            self.write(c.profilepic) 
+
+class ShowsharedPosts(Handler):
+
+    def get(self):
+        postid=self.request.get('pid')
+        c=share.get_by_id(int(postid))
+        self.response.headers['Content-Type'] = 'image/jpg'
+        self.write(c.shared_image) 
+
+class ShowsellPosts(Handler):
+
+    def get(self):
+        postid=self.request.get('pid')
+        self.write(postid)
+        c=sell.get_by_id(int(postid))
+        self.response.headers['Content-Type'] = 'image/jpg'
+        self.write(c.sell_image)        
+
+
+friendspost=[]
+friendssell=[]
+
 class NewsHandler(Handler):
-    def get(self):       
-        friendspost=[]
-        friendssell=[]
+    def get(self):
+       
+        global friendspost
+        global friendssell
         error=""
         youmayknow=[]
         user_id=self.request.cookies.get('user_id')
@@ -321,7 +367,7 @@ class NewsHandler(Handler):
                             for purchase in pointr:
                                 friendspost.append(purchase)
                     for friend in cursor:
-                        pontr=db.GqlQuery("select * from sell where email='%s'" %friend.friend_email)
+                        pointr=db.GqlQuery("select * from sell where email='%s'" %friend.friend_email)
                         checkfrndsell=pointr.get()
                         if checkfrndsell:
                             for purchase in pointr:
@@ -339,9 +385,53 @@ class NewsHandler(Handler):
         email=user.email
         friends_id=self.request.get('submit')
         friend_id=friends_id.split()
-        obj=person(email=email,friend_email=friend_id[1]);
+        obj=person(email=email,friend_email=friend_id[1])
         obj.put()
         self.redirect('/newsfeed')
+
+
+class NotifyHandler(Handler):
+    def get(self):
+
+        yourorder=[]
+
+        user_id=self.request.cookies.get('user_id')
+        if user_id:
+            result=check_secure_val(user_id)
+            if result:
+                
+                user=Customer.get_by_id(int(result))
+                email=user.email
+
+                cursor=db.GqlQuery("select * from lastchecknotify where email = '%s'" %email)
+                c=cursor.get()
+
+                if c:
+                    
+                    db.delete(c.key())
+                    
+                    obj=lastchecknotify(email=email)
+                    obj.put()
+                    
+                else:
+                    obj=lastchecknotify(email=email)
+                    obj.put()
+
+                cursor=db.GqlQuery("select * from Order where email='%s'" %email)
+                c=cursor.get()
+
+                if c:
+                    for yourord in cursor:
+                        yourorder.append(c)    
+
+                self.render("notification.html",friendspost=friendspost,friendssell=friendssell,yourorder=yourorder)        
+                        
+
+            else:
+                self.redirect("/")
+        else:
+                self.redirect("/")    
+
 
 class ShareHandler(Handler):
     def post(self):
@@ -349,9 +439,11 @@ class ShareHandler(Handler):
         result=check_secure_val(user_id)
         user=Customer.get_by_id(int(result))
         email=user.email
+        name=user.name
+        profilepic=user.profilepic
         shared_post=self.request.get('info')
         shared_image=self.request.get('fileToUpload')
-        obj=share(email=email,shared_post=shared_post,shared_image=shared_image)
+        obj=share(email=email,name=name,profilepic=profilepic,shared_post=shared_post,shared_image=shared_image)
         obj.put() 
         self.redirect('/newsfeed')  
 
@@ -361,11 +453,13 @@ class SellHandler(Handler):
         result=check_secure_val(user_id)
         user=Customer.get_by_id(int(result))
         email=user.email
+        name=user.name
+        profilepic=user.profilepic
         sell_post=self.request.get('info')
         price=self.request.get('price')
         quantity=self.request.get('quantity')
         sell_image=self.request.get('fileToUpload')
-        obj=sell(email=email,sell_post=sell_post,price=price,quantity=quantity,sell_image=sell_image)
+        obj=sell(email=email,name=name,profilepic=profilepic,sell_post=sell_post,price=price,quantity=quantity,sell_image=sell_image)
         obj.put() 
         self.redirect('/newsfeed') 
 
@@ -408,7 +502,7 @@ class SignupHandler(Handler):
                 user_id=str(user_id)
                 id_to_send=make_secure_val(user_id)
                 self.response.headers.add_header('Set-Cookie','user_id=%s'%id_to_send)
-                self.redirect("/newsfeed")
+                self.redirect("/")
 
 class TestHandler(Handler):
     def get(self):
@@ -429,6 +523,22 @@ class ProductHandler(Handler):
         q=Query(question=query,product_id=product.key())
         q.put()
         self.redirect('/')
+
+
+class showProducts(Handler):
+    def get(self):
+        sublist=[];
+        subcategory=self.request.get('subcategory');
+        cursor=db.GqlQuery("SELECT * from Products where subcategory = '%s'" %subcategory);
+
+        c=cursor.get();
+
+        if c:
+            for c in cursor:
+                sublist.append(c);
+
+        self.render("showProducts.html",sublist=sublist);            
+
 
 class BackendHandler(Handler):
     def get(self):
@@ -455,5 +565,7 @@ app = webapp2.WSGIApplication([
     ('/', MainHandler),('/login',LoginHandler),('/loginEmail',LoginWithEmail),
     ('/signup',SignupHandler),('/newsfeed',NewsHandler),('/sellers',Sellers),('/show',Show),
     ('/test',TestHandler),('/backend',BackendHandler),('/product',ProductHandler),('/sell',SellHandler),
-    ('/answer',AnswerHandler),('/share',ShareHandler)
+    ('/answer',AnswerHandler),('/share',ShareHandler),('/showsharedposts',ShowsharedPosts),
+    ('/showsellposts',ShowsellPosts),('/friendpic',FriendPic),('/notify',NotifyHandler),
+    ('/showfriends',ShowFriends),('/showproducts',showProducts),
 ], debug=True)
