@@ -142,25 +142,18 @@ message=""
 sugitems=[]  
 
 class MainHandler(Handler):
-
     global message
     global sugitems
-
     def get(self):
-
         identity=self.request.cookies.get('user_id')
         productidentity=self.request.cookies.get('product_id')
-
         if identity and productidentity:
-
             message="suggested items on basis of your and your's frinds history"
             identity=str(identity).split('|')[0]
             info=Customer.get_by_id(int(identity))
             mail=info.email
-
             cursor=db.GqlQuery("select * from Order where email = '%s' " %mail)
             myorder=cursor.get()
-
             if myorder:
                 for myorder in cursor:
                     prodid=myorder.product_id
@@ -168,105 +161,70 @@ class MainHandler(Handler):
                     product=ponter.get()
                     prodbrand=product.brand
                     pointr=db.GqlQuery("select * from products where brand='%s'" %prodbrand)
-
                     for probrands in pointr:
                         sugitems.append(probrands.product_id)
-
-
             cursor=db.GqlQuery("select * from person where email= '%s'" %mail)
             friends=cursor.get()
-
             if friends:
                 for friend in friends:
                     friend_email=friend.friend_email
                     cursor=db.GqlQuery("select * from Order where email = '%s' " %friend_email)
                     friendpurchase=cursor.get()
-
                     if friendpurchase:
                         for items in cursor:
                             sugitems.append(items.product_id)
-
-
-
             self.render("index.html",sugitems=sugitems)
-
-
         elif identity:
-
             message="your friends bought items"
             identity=str(identity).split('|')[0]
             info=Customer.get_by_id(int(identity))
             mail=info.email
-
             cursor=db.GqlQuery("select * from person where email= '%s'" %mail)
             friends=cursor.get()
-
             if friends:
                 for friend in cursor:
                     friend_email=friend.friend_email
                     cursor=db.GqlQuery("select * from Order where email = '%s' " %friend_email)
                     friendpurchase=cursor.get()
-
                     if friendpurchase:
                         for items in cursor:
                             sugitems.append(items.product_id)
-
-
-
                 self.render("index.html",sugitems=sugitems)
-
             else:
                 message="connect with friends to see what they bought"
                 self.render("index.html",message=message,sugitems=sugitems)     
-
-
         else:
-            
             message="create id and connect with people on flipbook to get suggestions"    
-
             self.render("index.html",message=message,sugitems=sugitems)
-        
-
     def post(self):
-
-
         search=self.request.get('search')
-
         if search:
             self.render("index.html",message=message,sugitems=sugitems)
-            #self.write(search)
             self.write("<p></p>")
-
             info=search.split()
             cursor=db.GqlQuery("select * from Products")
             showitems=[]
             uniqueshowitems=[]
             uniqueid=[]
-
             for i in range(len(info)):
                 content=info[i]
                 for c in cursor:
                     match=c.name.split()
-
                     for j in range(len(match)):
-                    
                         if content.lower()==match[j].lower():
                             showitems.append(c)
                             break   
-
             for item in showitems:
                 if item.key().id() not in uniqueid:
                     uniqueshowitems.append(item)
                     uniqueid.append(item.key().id())    
-            
             if uniqueshowitems:
                 for showitem in uniqueshowitems:
                     self.write(showitem.name)
                     self.write("<br>")
-
             else:
                 self.write("No Result Found <br>")
-         
+
 class LoginHandler(Handler):
     def get(self):
         self.render("login.html")
@@ -324,27 +282,22 @@ class Show(Handler):
         self.response.headers['Content-Type'] = 'image/jpg'
         self.write(c.image)
 
-
 class NewsHandler(Handler):
-    def get(self):
-       
+    def get(self):       
         friendspost=[]
         friendssell=[]
         error=""
         youmayknow=[]
-
         user_id=self.request.cookies.get('user_id')
         if user_id:
             result=check_secure_val(user_id)
             if result:
-                
                 user=Customer.get_by_id(int(result))
                 self.write('<h2>Welcome</h2><br>')
                 self.write(user.email)
                 if (user.institution):
                     cursor=db.GqlQuery("Select * from Customer where institution ='%(institution)s'  AND email != '%(email)s' " %{'institution':user.institution,'email':user.email})
                     check=cursor.get()
-
                     if check:
                         for c in cursor:
                             insemail=c.email
@@ -352,37 +305,27 @@ class NewsHandler(Handler):
                             p=pointr.get()
                             if not p:
                                 youmayknow.append(c)
-                            
-
                     else:
                         self.write("yup")
                         cursor=db.GqlQuery("Select * from Customer  where email != '%s' limit 10 "% user.email)    
                         youmayknow=cursor
                 else:
                     error="Please add institution"
-                    
-
                 cursor=db.GqlQuery("select * from person where email='%s'" %user.email)
                 checkfriend=cursor.get()
-
                 if checkfriend:
                     for friend in cursor:
-                        
                         pointr=db.GqlQuery("select * from share where email='%s'" %friend.friend_email)
                         checkfrndshare=pointr.get()
                         if checkfrndshare:
                             for purchase in pointr:
                                 friendspost.append(purchase)
-
                     for friend in cursor:
-                        
                         pontr=db.GqlQuery("select * from sell where email='%s'" %friend.friend_email)
                         checkfrndsell=pointr.get()
                         if checkfrndsell:
                             for purchase in pointr:
                                 friendssell.append(purchase)            
-
-                
                 self.render("newsfeed.html",friendspost=friendspost,friendssell=friendssell,error=error,youmayknow=youmayknow)
             else:
                 self.redirect("/")
@@ -393,23 +336,18 @@ class NewsHandler(Handler):
         user_id=self.request.cookies.get('user_id')
         result=check_secure_val(user_id)
         user=Customer.get_by_id(int(result))
-        
         email=user.email
         friends_id=self.request.get('submit')
         friend_id=friends_id.split()
-
         obj=person(email=email,friend_email=friend_id[1]);
         obj.put()
-
         self.redirect('/newsfeed')
 
 class ShareHandler(Handler):
     def post(self):
-
         user_id=self.request.cookies.get('user_id')
         result=check_secure_val(user_id)
         user=Customer.get_by_id(int(result))
-        
         email=user.email
         shared_post=self.request.get('info')
         shared_image=self.request.get('fileToUpload')
@@ -419,17 +357,14 @@ class ShareHandler(Handler):
 
 class SellHandler(Handler):
     def post(self):
-
         user_id=self.request.cookies.get('user_id')
         result=check_secure_val(user_id)
         user=Customer.get_by_id(int(result))
-        
         email=user.email
         sell_post=self.request.get('info')
         price=self.request.get('price')
         quantity=self.request.get('quantity')
         sell_image=self.request.get('fileToUpload')
-
         obj=sell(email=email,sell_post=sell_post,price=price,quantity=quantity,sell_image=sell_image)
         obj.put() 
         self.redirect('/newsfeed') 
@@ -483,20 +418,14 @@ class ProductHandler(Handler):
     def get(self):
         product_id=self.request.get('pid')
         cursor=Products.get_by_id(int(product_id))
-
         cursorQuery=db.GqlQuery("SELECT * FROM Query")
-        #self.response.headers['Content-Type']='image/png'
-        #self.response.headers.add_header('Content-Type','image/png')
         image=cursor.image
         self.render("product.html",pid=product_id,cursor=cursor,cursorQuery=cursorQuery,condition=cursor.key(),image=image)
-        #temp=self.request.headers.get('Content-Type')
-        #self.write(temp)
+
     def post(self):
         query=self.request.get('query')
         product_id=self.request.get('pid')
         product=Products.get_by_id(int(product_id))
-        #temp=query+product_id
-        #self.write(temp)
         q=Query(question=query,product_id=product.key())
         q.put()
         self.redirect('/')
@@ -505,11 +434,7 @@ class BackendHandler(Handler):
     def get(self):
         token=self.request.get('token')
         name,email=get_js(token)
-        self.write(name)
-        #self.render("backend.html",token=token)
-            #logging.warn(traceback.format_exc())
-        #token=self.request.get('token')
-        #self.render("backend.html",token=token)   
+        self.write(name) 
 
 class AnswerHandler(Handler):
     def get(self):

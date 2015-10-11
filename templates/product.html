@@ -76,9 +76,6 @@
 			</div>
 			<div class="row">
 				<div class="row">
-					{{cursor.info}}
-				</div>
-				<div class="row">
 					Price
 				</div>
 				<div class="row">
@@ -90,7 +87,7 @@
 		</div>
 	</div>
 	<div class="row">
-		Detail Descriptio
+		{{cursor.info}}
 	</div>
 	<div class="row">
 		<div class="container">
@@ -110,6 +107,38 @@
 				    <div>    
 				        <button name="submit" class="btn btn-lg btn-info btn-block" type="submit">
 				        	Submit Query
+				        </button>
+				    </div>
+				</div>
+		      </form> 
+		</div>
+	</div>
+	<div class="row">
+		<div class="container">
+		    <form class="form-signin col-sm-4 col-sm-offset-4" method="POST">
+		        <h2 class="form-signin-heading text-center" style="color:yellow">
+		        	Your Review
+		        </h2>
+		        <div class="form-group">
+			        <label class="sr-only">
+			        	Review
+			        </label>
+			        <div >
+			        	<textarea class="form-control" placeholder="Type your review" required name="review"></textarea> 
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="sr-only">
+			        	Rating
+			        </label>
+			        <div >
+			        	<textarea class="form-control" placeholder="It Will be Replaced by stars" required name="rating"></textarea> 
+			        </div>
+			    </div>
+			    <div class="row">
+				    <div>    
+				        <button name="submit" class="btn btn-lg btn-info btn-block" type="submit">
+				        	Submit
 				        </button>
 				    </div>
 				</div>
