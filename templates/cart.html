@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cart</title>
+</head>
+<body>
+<a href="/logout">LOGOUT</a>
+
+{%for c in cursor%}
+	{%if c.email==user.email%}
+		{{c.email}} bought {{c.quantity}} {{c.price}} {{c.product_id.key().id()}}
+		<br>
+	{%endif%}
+{%endfor%}
+total={{total}}
+<a href="/checkout">Proceed To Checkout</a>
+</body>
+</html>

@@ -12,6 +12,7 @@
   	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
+<a href="/logout">LOGOUT</a>
 <div class="container">
 	<div class="row">
 		<div class="col-md-1">
@@ -67,24 +68,56 @@
           			</div>
 	</div>
 	<div class="row" >
+
+
+	<!--
 		<div class ="col-md-4">
 			<img src="/show?pid={{pid}}" class="img-responsive img-thumbnail">
 		</div>
 		<div class="col-md-8">
 			<div class="row">
-				Name
+				{{cursor.name}}
 			</div>
 			<div class="row">
 				<div class="row">
-					Price
+					Rs. {{cursor.price}}
 				</div>
 				<div class="row">
 					<button>
-						Add to cart
+						<a href="/showcart">Add to cart</a>
 					</button>
 				</div>
 			</div>
 		</div>
+	-->
+		
+		    <form class="form-signin" method="POST" action="/showcart?pid={{pid}}">
+		        
+
+		        <div class ="col-md-4">
+					<img src="/show?pid={{pid}}" class="img-responsive img-thumbnail">
+				</div>
+				<div class="col-md-8">
+					<div class="row">
+						{{cursor.name}}
+					</div>
+					<div class="row">
+						<div class="row">
+							Rs. {{cursor.price}}
+						</div>
+						<div class="row">
+							<input type="text" name="quantity" placeholder="quantity" value="{{quantity}}">
+						</div>
+						<div class="row">
+							<button name="submit" class="btn btn-lg btn-info" type="submit">
+								Add to cart
+							</button>
+						</div>
+					</div>
+				</div>
+		    </form> 
+		
+
 	</div>
 	<div class="row">
 		{{cursor.info}}

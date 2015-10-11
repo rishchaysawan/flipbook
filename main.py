@@ -81,19 +81,16 @@ class Order(db.Model):
     contact=db.IntegerProperty(required=True)
     address=db.StringProperty(required=True)
 
-
 class Cart(db.Model):
     product_id=db.ReferenceProperty(Products)
     email=db.StringProperty(required=True)
     quantity=db.IntegerProperty(required=True)
     price=db.IntegerProperty(required=True)
     
-
 class Rating(db.Model):
     product_id=db.ReferenceProperty(Products)
     count=db.IntegerProperty(required=True)
     rating=db.IntegerProperty(required=True)
-
 
 class Bool_rating(db.Model):
     email=db.StringProperty(required=True)
@@ -329,7 +326,6 @@ friendssell=[]
 
 class NewsHandler(Handler):
     def get(self):
-       
         global friendspost
         global friendssell
         error=""
@@ -514,7 +510,7 @@ class ProductHandler(Handler):
         cursor=Products.get_by_id(int(product_id))
         cursorQuery=db.GqlQuery("SELECT * FROM Query")
         image=cursor.image
-        self.render("product.html",pid=product_id,cursor=cursor,cursorQuery=cursorQuery,condition=cursor.key(),image=image)
+        self.render("product.html",quantity=1,pid=product_id,cursor=cursor,cursorQuery=cursorQuery,condition=cursor.key(),image=image)
 
     def post(self):
         query=self.request.get('query')
@@ -561,11 +557,51 @@ class AnswerHandler(Handler):
         a.put()
         self.redirect("/")
     
+
+class ShowCart(Handler):
+    def get(self):
+        self.write("Invalid Request")
+
+    def post(self):
+        pid=self.request.get('pid')
+        quantity=int(self.request.get('quantity'))
+        product=Products.get_by_id(int(pid))
+        user_id=self.request.cookies.get('user_id')
+        if user_id:
+            result=check_secure_val(user_id)
+            if result:
+                user=Customer.get_by_id(int(result))
+                email=user.email
+                price=product.price
+                product_id=product.key()
+                cart=Cart(product_id=product_id,email=email,price=price,quantity=quantity)
+                cart.put()
+                cursor=db.GqlQuery("SELECT * FROM Cart")
+                total=0
+                for c in cursor:
+                    if c.email==user.email:
+                        total+=(c.quantity*c.price)
+                self.render("cart.html",cursor=cursor,user=user,total=total)
+            else:
+                self.render("/")
+        else:
+            self.render("/")
+
+class Checkout(Handler):
+    def get(self):
+        self.render("checkout.html")
+
+class LogoutHandler(Handler):
+    def get(self):
+        self.response.headers.add_header("Set-Cookie","user_id=")
+        self.redirect("/")
+
 app = webapp2.WSGIApplication([
     ('/', MainHandler),('/login',LoginHandler),('/loginEmail',LoginWithEmail),
     ('/signup',SignupHandler),('/newsfeed',NewsHandler),('/sellers',Sellers),('/show',Show),
     ('/test',TestHandler),('/backend',BackendHandler),('/product',ProductHandler),('/sell',SellHandler),
     ('/answer',AnswerHandler),('/share',ShareHandler),('/showsharedposts',ShowsharedPosts),
     ('/showsellposts',ShowsellPosts),('/friendpic',FriendPic),('/notify',NotifyHandler),
-    ('/showfriends',ShowFriends),('/showproducts',showProducts),
+    ('/showfriends',ShowFriends),('/showproducts',showProducts),('/showcart',ShowCart),('/checkout',Checkout),
+    ('/logout',LogoutHandler)
 ], debug=True)
