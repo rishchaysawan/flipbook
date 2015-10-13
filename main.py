@@ -8,10 +8,11 @@ import string
 import urllib2
 import json
 from time import gmtime, strftime
-
 from google.appengine.ext import db
 from google.appengine.api import urlfetch
 from google.appengine.api import users
+import datetime
+
 SECRET="qwerty"
 URL="https://www.googleapis.com/oauth2/v3/tokeninfo?id_token="
 
@@ -75,10 +76,10 @@ class Products(db.Model):
 class Order(db.Model):
     email=db.StringProperty(required=True)
     product_id=db.ReferenceProperty(Products)
-    date_of_production=db.DateTimeProperty(required=True)
-    date_of_delivery=db.DateTimeProperty(required=True)
+    date_of_order=db.DateTimeProperty(auto_now_add=True)
+    date_of_delivery=db.DateProperty(required=True)
     status=db.StringProperty(required=True)
-    contact=db.IntegerProperty(required=True)
+    contact=db.StringProperty(required=True)
     address=db.StringProperty(required=True)
 
 class Cart(db.Model):
@@ -278,7 +279,6 @@ class Sellers(Handler):
         self.redirect('/')
 
 class Show(Handler):
-    
     def get(self):
         product_id=self.request.get('pid')
         c=Products.get_by_id(int(product_id))
@@ -286,7 +286,6 @@ class Show(Handler):
         self.write(c.image)
 
 class ShowFriends(Handler):
-    
     def get(self):
         product_id=self.request.get('pid')
         c=Customer.get_by_id(int(product_id))
@@ -294,11 +293,9 @@ class ShowFriends(Handler):
         self.write(c.profilepic)        
 
 class FriendPic(Handler):
-    
     def get(self):
         emailid=self.request.get('eid')
         cursor=db.GqlQuery("select * from Customer where email ='%s'" %emailid)
-
         for c in cursor:
             self.response.headers['Content-Type'] = 'image/jpg'
             self.write(c.profilepic) 
@@ -319,11 +316,8 @@ class ShowsellPosts(Handler):
         c=sell.get_by_id(int(postid))
         self.response.headers['Content-Type'] = 'image/jpg'
         self.write(c.sell_image)        
-
-
 friendspost=[]
 friendssell=[]
-
 class NewsHandler(Handler):
     def get(self):
         global friendspost
@@ -385,7 +379,6 @@ class NewsHandler(Handler):
         obj.put()
         self.redirect('/newsfeed')
 
-
 class NotifyHandler(Handler):
     def get(self):
 
@@ -427,7 +420,6 @@ class NotifyHandler(Handler):
                 self.redirect("/")
         else:
                 self.redirect("/")    
-
 
 class ShareHandler(Handler):
     def post(self):
@@ -570,27 +562,55 @@ class ShowCart(Handler):
         if user_id:
             result=check_secure_val(user_id)
             if result:
-                user=Customer.get_by_id(int(result))
-                email=user.email
-                price=product.price
-                product_id=product.key()
-                cart=Cart(product_id=product_id,email=email,price=price,quantity=quantity)
-                cart.put()
-                cursor=db.GqlQuery("SELECT * FROM Cart")
-                total=0
-                for c in cursor:
-                    if c.email==user.email:
-                        total+=(c.quantity*c.price)
-                self.render("cart.html",cursor=cursor,user=user,total=total)
+                if quantity>product.quantity:
+                    self.render("cart.html",error="quantity Not Available")
+                else:
+                    user=Customer.get_by_id(int(result))
+                    email=user.email
+                    price=product.price
+                    product_id=product.key()
+                    cart=Cart(product_id=product_id,error="",email=email,price=price,quantity=quantity)
+                    cart.put()
+                    cursor=db.GqlQuery("SELECT * FROM Cart")
+                    total=0
+                    for c in cursor:
+                        if c.email==user.email:
+                            total+=(c.quantity*c.price-product.discount)
+                    self.render("cart.html",cursor=cursor,user=user,total=total)
             else:
-                self.render("/")
+                self.redirect("/")
         else:
-            self.render("/")
+            self.redirect("/")
 
 class Checkout(Handler):
     def get(self):
-        self.render("checkout.html")
-
+        self.render("Checkout.html")
+    def post(self):
+        user_id=self.request.cookies.get('user_id')
+        if user_id:
+            result=check_secure_val(user_id)
+            if result:
+                contact=self.request.get('contact')
+                address=self.request.get('address')
+                user=Customer.get_by_id(int(result))
+                email=user.email
+                cursor=db.GqlQuery("SELECT * FROM Cart WHERE email='%s'"%email)
+                cookies=""
+                for c in cursor:
+                    cookies=cookies+str(c.product_id.key().id())+"|"
+                    product_id=c.product_id
+                    date_of_delivery=datetime.date.today()+datetime.timedelta(6)
+                    status="Your Order Has Been Placed. Thanks for choosing Flipbook"
+                    obj=Order(email=email,date_of_delivery=date_of_delivery,product_id=product_id,status=status,contact=contact,address=address)
+                    obj.put()
+                    c.delete()
+                self.response.headers.add_header("Set-Cookie","productBought=%s"%cookies)
+                self.redirect("/")
+            else:
+                self.redirect("/")
+        else:
+            self.redirect("/")
+        
 class LogoutHandler(Handler):
     def get(self):
         self.response.headers.add_header("Set-Cookie","user_id=")

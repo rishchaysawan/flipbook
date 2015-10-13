@@ -5,7 +5,7 @@
 </head>
 <body>
 <a href="/logout">LOGOUT</a>
-
+{{error}}
 {%for c in cursor%}
 	{%if c.email==user.email%}
 		{{c.email}} bought {{c.quantity}} {{c.price}} {{c.product_id.key().id()}}
