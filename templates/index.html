@@ -28,21 +28,20 @@
       </form>
     </div>
     <div class="col-md-4">
-      <div class="col-md-3">
-        <a href="login">login/signup</a>
-      </div>
-      
-      <div class="col-md-3">
-        <a href="/newsfeed"> Newsfeed</a>
+      <div class="col-md-4">
+        {{greet|safe}}
       </div>
       <div class="col-md-3">
-        <a href="/notify"> Notification</a>
+        <a href="/newsfeed">Newsfeed</a>
       </div>
-      <div class="col-md-3">
-        <a href="/logout">LOGOUT</a>
+      <div class="col-md-2">
+        <a href="/notify"> Notify</a>
       </div>
-      <div class="col-md-3">
-        cart
+      <div class="col-md-2">
+        <a href="/showcart">Cart</a>
+      </div>
+      <div class="col-md-1">
+        {{logout|safe}}
       </div>
     </div>
   </div>

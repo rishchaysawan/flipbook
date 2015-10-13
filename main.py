@@ -81,6 +81,8 @@ class Order(db.Model):
     status=db.StringProperty(required=True)
     contact=db.StringProperty(required=True)
     address=db.StringProperty(required=True)
+    quantity=db.IntegerProperty(required=True)
+    price=db.IntegerProperty(required=True)
 
 class Cart(db.Model):
     product_id=db.ReferenceProperty(Products)
@@ -150,57 +152,173 @@ class MainHandler(Handler):
     global message
     global sugitems
     def get(self):
-        identity=self.request.cookies.get('user_id')
-        productidentity=self.request.cookies.get('product_id')
-        if identity and productidentity:
-            message="suggested items on basis of your and your's frinds history"
-            identity=str(identity).split('|')[0]
-            info=Customer.get_by_id(int(identity))
-            mail=info.email
-            cursor=db.GqlQuery("select * from Order where email = '%s' " %mail)
-            myorder=cursor.get()
-            if myorder:
-                for myorder in cursor:
-                    prodid=myorder.product_id
-                    pointr=db.GqlQuery("select * from Products where product_id='%s'" %prodid)
-                    product=ponter.get()
-                    prodbrand=product.brand
-                    pointr=db.GqlQuery("select * from products where brand='%s'" %prodbrand)
-                    for probrands in pointr:
-                        sugitems.append(probrands.product_id)
-            cursor=db.GqlQuery("select * from person where email= '%s'" %mail)
-            friends=cursor.get()
-            if friends:
-                for friend in friends:
-                    friend_email=friend.friend_email
-                    cursor=db.GqlQuery("select * from Order where email = '%s' " %friend_email)
-                    friendpurchase=cursor.get()
-                    if friendpurchase:
-                        for items in cursor:
-                            sugitems.append(items.product_id)
-            self.render("index.html",sugitems=sugitems)
-        elif identity:
-            message="your friends bought items"
-            identity=str(identity).split('|')[0]
-            info=Customer.get_by_id(int(identity))
-            mail=info.email
-            cursor=db.GqlQuery("select * from person where email= '%s'" %mail)
-            friends=cursor.get()
-            if friends:
-                for friend in cursor:
-                    friend_email=friend.friend_email
-                    cursor=db.GqlQuery("select * from Order where email = '%s' " %friend_email)
-                    friendpurchase=cursor.get()
-                    if friendpurchase:
-                        for items in cursor:
-                            sugitems.append(items.product_id)
-                self.render("index.html",sugitems=sugitems)
+        user_id=self.request.cookies.get('user_id')
+        if user_id:
+            result=check_secure_val(user_id)
+            if result:
+                cust=Customer.get_by_id(int(result))
+                greet="Hello, "+cust.name
+                logout='<a href="/logout">LOGOUT</a>'
+                identity=self.request.cookies.get('user_id')
+                productidentity=self.request.cookies.get('product_id')
+                if identity and productidentity:
+                    message="suggested items on basis of your and your's frinds history"
+                    identity=str(identity).split('|')[0]
+                    info=Customer.get_by_id(int(identity))
+                    mail=info.email
+                    cursor=db.GqlQuery("select * from Order where email = '%s' " %mail)
+                    myorder=cursor.get()
+                    if myorder:
+                        for myorder in cursor:
+                            prodid=myorder.product_id
+                            pointr=db.GqlQuery("select * from Products where product_id='%s'" %prodid)
+                            product=ponter.get()
+                            prodbrand=product.brand
+                            pointr=db.GqlQuery("select * from products where brand='%s'" %prodbrand)
+                            for probrands in pointr:
+                                sugitems.append(probrands.product_id)
+                    cursor=db.GqlQuery("select * from person where email= '%s'" %mail)
+                    friends=cursor.get()
+                    if friends:
+                        for friend in friends:
+                            friend_email=friend.friend_email
+                            cursor=db.GqlQuery("select * from Order where email = '%s' " %friend_email)
+                            friendpurchase=cursor.get()
+                            if friendpurchase:
+                                for items in cursor:
+                                    sugitems.append(items.product_id)
+                    self.render("index.html",sugitems=sugitems,greet=greet,logout=logout)
+                elif identity:
+                    message="your friends bought items"
+                    identity=str(identity).split('|')[0]
+                    info=Customer.get_by_id(int(identity))
+                    mail=info.email
+                    cursor=db.GqlQuery("select * from person where email= '%s'" %mail)
+                    friends=cursor.get()
+                    if friends:
+                        for friend in cursor:
+                            friend_email=friend.friend_email
+                            cursor=db.GqlQuery("select * from Order where email = '%s' " %friend_email)
+                            friendpurchase=cursor.get()
+                            if friendpurchase:
+                                for items in cursor:
+                                    sugitems.append(items.product_id)
+                        self.render("index.html",sugitems=sugitems,greet=greet,logout=logout)
+                    else:
+                        message="connect with friends to see what they bought"
+                        self.render("index.html",message=message,sugitems=sugitems,greet=greet,logout=logout)     
+                else:
+                    message="create id and connect with people on flipbook to get suggestions"    
+                    self.render("index.html",message=message,sugitems=sugitems,greet=greet,logout=logout)
+
             else:
-                message="connect with friends to see what they bought"
-                self.render("index.html",message=message,sugitems=sugitems)     
+                greet='<a href="/login">login/signup</a>'
+                identity=self.request.cookies.get('user_id')
+                productidentity=self.request.cookies.get('product_id')
+                if identity and productidentity:
+                    message="suggested items on basis of your and your's frinds history"
+                    identity=str(identity).split('|')[0]
+                    info=Customer.get_by_id(int(identity))
+                    mail=info.email
+                    cursor=db.GqlQuery("select * from Order where email = '%s' " %mail)
+                    myorder=cursor.get()
+                    if myorder:
+                        for myorder in cursor:
+                            prodid=myorder.product_id
+                            pointr=db.GqlQuery("select * from Products where product_id='%s'" %prodid)
+                            product=ponter.get()
+                            prodbrand=product.brand
+                            pointr=db.GqlQuery("select * from products where brand='%s'" %prodbrand)
+                            for probrands in pointr:
+                                sugitems.append(probrands.product_id)
+                    cursor=db.GqlQuery("select * from person where email= '%s'" %mail)
+                    friends=cursor.get()
+                    if friends:
+                        for friend in friends:
+                            friend_email=friend.friend_email
+                            cursor=db.GqlQuery("select * from Order where email = '%s' " %friend_email)
+                            friendpurchase=cursor.get()
+                            if friendpurchase:
+                                for items in cursor:
+                                    sugitems.append(items.product_id)
+                    self.render("index.html",sugitems=sugitems,greet=greet)
+                elif identity:
+                    message="your friends bought items"
+                    identity=str(identity).split('|')[0]
+                    info=Customer.get_by_id(int(identity))
+                    mail=info.email
+                    cursor=db.GqlQuery("select * from person where email= '%s'" %mail)
+                    friends=cursor.get()
+                    if friends:
+                        for friend in cursor:
+                            friend_email=friend.friend_email
+                            cursor=db.GqlQuery("select * from Order where email = '%s' " %friend_email)
+                            friendpurchase=cursor.get()
+                            if friendpurchase:
+                                for items in cursor:
+                                    sugitems.append(items.product_id)
+                        self.render("index.html",sugitems=sugitems,greet=greet)
+                    else:
+                        message="connect with friends to see what they bought"
+                        self.render("index.html",message=message,sugitems=sugitems,greet=greet)     
+                else:
+                    message="create id and connect with people on flipbook to get suggestions"    
+                    self.render("index.html",message=message,sugitems=sugitems,greet=greet)
         else:
-            message="create id and connect with people on flipbook to get suggestions"    
-            self.render("index.html",message=message,sugitems=sugitems)
+            greet='<a href="/login">login/signup</a>'
+            identity=self.request.cookies.get('user_id')
+            productidentity=self.request.cookies.get('product_id')
+            if identity and productidentity:
+                message="suggested items on basis of your and your's frinds history"
+                identity=str(identity).split('|')[0]
+                info=Customer.get_by_id(int(identity))
+                mail=info.email
+                cursor=db.GqlQuery("select * from Order where email = '%s' " %mail)
+                myorder=cursor.get()
+                if myorder:
+                    for myorder in cursor:
+                        prodid=myorder.product_id
+                        pointr=db.GqlQuery("select * from Products where product_id='%s'" %prodid)
+                        product=ponter.get()
+                        prodbrand=product.brand
+                        pointr=db.GqlQuery("select * from products where brand='%s'" %prodbrand)
+                        for probrands in pointr:
+                            sugitems.append(probrands.product_id)
+                cursor=db.GqlQuery("select * from person where email= '%s'" %mail)
+                friends=cursor.get()
+                if friends:
+                    for friend in friends:
+                        friend_email=friend.friend_email
+                        cursor=db.GqlQuery("select * from Order where email = '%s' " %friend_email)
+                        friendpurchase=cursor.get()
+                        if friendpurchase:
+                            for items in cursor:
+                                sugitems.append(items.product_id)
+                self.render("index.html",sugitems=sugitems,greet=greet)
+            elif identity:
+                message="your friends bought items"
+                identity=str(identity).split('|')[0]
+                info=Customer.get_by_id(int(identity))
+                mail=info.email
+                cursor=db.GqlQuery("select * from person where email= '%s'" %mail)
+                friends=cursor.get()
+                if friends:
+                    for friend in cursor:
+                        friend_email=friend.friend_email
+                        cursor=db.GqlQuery("select * from Order where email = '%s' " %friend_email)
+                        friendpurchase=cursor.get()
+                        if friendpurchase:
+                            for items in cursor:
+                                sugitems.append(items.product_id)
+                    self.render("index.html",sugitems=sugitems,greet=greet)
+                else:
+                    message="connect with friends to see what they bought"
+                    self.render("index.html",message=message,sugitems=sugitems,greet=greet)     
+            else:
+                message="create id and connect with people on flipbook to get suggestions"    
+                self.render("index.html",message=message,sugitems=sugitems,greet=greet)
+
+    #NO POST handler required in index page since a new search page
     def post(self):
         search=self.request.get('search')
         if search:
@@ -552,7 +670,21 @@ class AnswerHandler(Handler):
 
 class ShowCart(Handler):
     def get(self):
-        self.write("Invalid Request")
+        user_id=self.request.cookies.get('user_id')
+        if user_id:
+            result=check_secure_val(user_id)
+            if result:
+                user=Customer.get_by_id(int(result))
+                cursor=db.GqlQuery("SELECT * FROM Cart")
+                total=0
+                for c in cursor:
+                    if c.email==user.email:
+                        total+=(c.quantity*c.price)
+                self.render("cart.html",cursor=cursor,user=user,total=total)
+            else:
+                self.redirect("/")
+        else:
+            self.write("Please Login First")
 
     def post(self):
         pid=self.request.get('pid')
@@ -567,7 +699,7 @@ class ShowCart(Handler):
                 else:
                     user=Customer.get_by_id(int(result))
                     email=user.email
-                    price=product.price
+                    price=(product.price)-(((product.discount)*product.price)/100)
                     product_id=product.key()
                     cart=Cart(product_id=product_id,error="",email=email,price=price,quantity=quantity)
                     cart.put()
@@ -575,7 +707,7 @@ class ShowCart(Handler):
                     total=0
                     for c in cursor:
                         if c.email==user.email:
-                            total+=(c.quantity*c.price-product.discount)
+                            total+=(c.quantity*c.price)
                     self.render("cart.html",cursor=cursor,user=user,total=total)
             else:
                 self.redirect("/")
@@ -597,11 +729,15 @@ class Checkout(Handler):
                 cursor=db.GqlQuery("SELECT * FROM Cart WHERE email='%s'"%email)
                 cookies=""
                 for c in cursor:
-                    cookies=cookies+str(c.product_id.key().id())+"|"
+                    pid=c.product_id.key().id()
+                    cookies=cookies+str(pid)+"|"
+                    product=Products.get_by_id(pid)
+                    product.quantity=product.quantity-c.quantity
+                    product.put()
                     product_id=c.product_id
-                    date_of_delivery=datetime.date.today()+datetime.timedelta(6)
+                    date_of_delivery=datetime.date.today()+datetime.timedelta(7)
                     status="Your Order Has Been Placed. Thanks for choosing Flipbook"
-                    obj=Order(email=email,date_of_delivery=date_of_delivery,product_id=product_id,status=status,contact=contact,address=address)
+                    obj=Order(price=(c.price*c.quantity),quantity=c.quantity,email=email,date_of_delivery=date_of_delivery,product_id=product_id,status=status,contact=contact,address=address)
                     obj.put()
                     c.delete()
                 self.response.headers.add_header("Set-Cookie","productBought=%s"%cookies)
