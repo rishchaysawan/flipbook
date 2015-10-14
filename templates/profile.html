@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Your Profile</title>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css"> 
+    <script type="text/javascript" src="assets/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+    <link href="assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			Nav Bar
+		</div>
+		<div class="row">
+			Main Content
+			<div class="col-md-4">
+				<div class="row">
+					<img src="/showprofilepic" class="img-responsive img-thumbnail">
+				</div>
+				<div class="row">
+					<h4>Basic Info</h4>
+					<h4>Your Friends</h4>
+					<h4>Your Transactions</h4>
+					<h4>Edit Details</h4>
+				</div>
+			</div>
+			<div class="col-md-8">
+				{{customer.name}}
+				<br/>
+				{{customer.email}}
+				<br/>
+				{{customer.institution}}
+			</div>
+		</div>
+		<div class="row">
+			footer
+		</div>
+	</div>
+</body>
+</html>

@@ -157,7 +157,7 @@ class MainHandler(Handler):
             result=check_secure_val(user_id)
             if result:
                 cust=Customer.get_by_id(int(result))
-                greet="Hello, "+cust.name
+                greet="Hello, "+'<a href="/profile">'+cust.name+'</a>'
                 logout='<a href="/logout">LOGOUT</a>'
                 identity=self.request.cookies.get('user_id')
                 productidentity=self.request.cookies.get('product_id')
@@ -630,7 +630,6 @@ class ProductHandler(Handler):
         q.put()
         self.redirect('/')
 
-
 class showProducts(Handler):
     def get(self):
         sublist=[];
@@ -752,6 +751,32 @@ class LogoutHandler(Handler):
         self.response.headers.add_header("Set-Cookie","user_id=")
         self.redirect("/")
 
+class ProfilePicHandler(Handler):
+    def get(self):
+        user_id=self.request.cookies.get('user_id')
+        if user_id:
+            result=check_secure_val(user_id)
+            if result:
+                c=Customer.get_by_id(int(result))
+                self.response.headers['Content-Type'] = 'image/jpg'
+                self.write(c.profilepic)
+            else:
+                self.redirect("/")
+        else:
+            self.redirect("/")
+
+class ProfileHandler(Handler):
+    def get(self):
+        user_id=self.request.cookies.get('user_id')
+        if user_id:
+            result=check_secure_val(user_id)
+            if result:
+                cust=Customer.get_by_id(int(result))
+                self.render("profile.html",customer=cust)
+            else:
+                self.redirect("/")
+        else:
+            self.redirect("/")
 app = webapp2.WSGIApplication([
     ('/', MainHandler),('/login',LoginHandler),('/loginEmail',LoginWithEmail),
     ('/signup',SignupHandler),('/newsfeed',NewsHandler),('/sellers',Sellers),('/show',Show),
@@ -759,5 +784,5 @@ app = webapp2.WSGIApplication([
     ('/answer',AnswerHandler),('/share',ShareHandler),('/showsharedposts',ShowsharedPosts),
     ('/showsellposts',ShowsellPosts),('/friendpic',FriendPic),('/notify',NotifyHandler),
     ('/showfriends',ShowFriends),('/showproducts',showProducts),('/showcart',ShowCart),('/checkout',Checkout),
-    ('/logout',LogoutHandler)
+    ('/logout',LogoutHandler),('/profile',ProfileHandler),('/showprofilepic',ProfilePicHandler)
 ], debug=True)
