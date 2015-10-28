@@ -152,6 +152,9 @@ class Answer(db.Model):
     time=db.DateTimeProperty(auto_now_add=True)
     customerId=db.ReferenceProperty(Customer)
 
+class Transactions(db.Model):
+    transaction=db.TextProperty(required=True)
+
 class Handler(webapp2.RequestHandler):
     def write(self,*a,**kw):
         self.response.write(*a,**kw)
@@ -849,6 +852,8 @@ class Checkout(Handler):
                     obj=Order(price=(c.price*c.quantity),product_name=product_name,quantity=c.quantity,email=email,date_of_delivery=date_of_delivery,product_id=product_id,status=status,contact=contact,address=address)
                     obj.put()
                     c.delete()
+                temp=Transactions(transaction=cookies)
+                temp.put()
                 self.response.set_cookie('productBought','%s'%cookies,expires=datetime.datetime.now()+datetime.timedelta(365))
                 self.redirect("/")
             else:
