@@ -12,8 +12,11 @@ from google.appengine.ext import db
 from google.appengine.api import urlfetch
 from google.appengine.api import users
 import datetime
+<<<<<<< HEAD
 import apriori
 
+=======
+>>>>>>> fe5b75b4b5b3ede3af12c373d1952aa290b39426
 
 SECRET="qwerty"
 URL="https://www.googleapis.com/oauth2/v3/tokeninfo?id_token="
@@ -166,6 +169,7 @@ class Handler(webapp2.RequestHandler):
     def render(self,template,**kw):
         self.write(self.render_str(template,**kw))
 
+<<<<<<< HEAD
 def load_dataset():
 
     cursor=db.GqlQuery("select * from Transactions")
@@ -290,6 +294,8 @@ def rules_from_conseq(freqSet, H, support_data, rules, min_confidence=0.7):
 
 
 
+=======
+>>>>>>> fe5b75b4b5b3ede3af12c373d1952aa290b39426
 
 class MainHandler(Handler):
     def get(self):
@@ -899,6 +905,7 @@ class ShowCart(Handler):
                         count+=1
                 greet='<a href="/profile">Hello, '+user.name+'</a>'
                 logout='<a href="/logout">LOGOUT</a>'
+<<<<<<< HEAD
 
                 email=user.email
 
@@ -928,6 +935,9 @@ class ShowCart(Handler):
             
     
                 self.render("cart.html",error="Empty Cart",count=count,greet=greet,logout=logout,cursor=cursor,user=user,total=total,recommend=recommend)
+=======
+                self.render("cart.html",error="Empty Cart",count=count,greet=greet,logout=logout,cursor=cursor,user=user,total=total)
+>>>>>>> fe5b75b4b5b3ede3af12c373d1952aa290b39426
             else:
                 self.redirect("/login")
         else:
