@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+NEWSFEED
+</title>
+<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css"> 
+    <script type="text/javascript" src="assets/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+    <link href="assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+
+<a href="/logout">LOGOUT</a>
+  <div class="row">
+        <!--
+          <h1 class="text-center">Team gallary</h1>
+          -->
+          <a class="btn btn-success " role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" >
+            <h1>
+              Share
+            </h1>
+          </a>
+
+          <a class="btn btn-success " role="button" data-toggle="collapse" href="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2" >
+            <h1>
+              Sell
+            </h1>
+          </a>
+
+          <div class="collapse" id="collapseExample">
+            <div class="well greybg">
+              <form class="form-signin form-horizontal col-sm-4 col-sm-offset-4" action="/share" method="POST" enctype="multipart/form-data">
+          <h2 class="form-signin-heading text-center" style="color:Red">
+            Share with friends 
+          </h2>
+         
+
+         
+         <div class="form-group">
+            <label class="sr-only">
+              About Product
+            </label>
+            <div >
+              <textarea name="info" rows="4" cols="70" class="form-control" placeholder="info" required value=""></textarea>
+            </div>
+        </div>
+              
+         <div class="form-group">
+            <label class="sr-only">
+              Image
+            </label>
+            <div >
+              <input type="file" name="fileToUpload" class="form-control" required value="">
+                   <input type="submit" value="Share post" name="submit">
+            </div>
+        </div>
+        
+  </form>
+            </div>
+          </div>
+
+
+
+          <div class="collapse" id="collapseExample2">
+            <div class="well greybg">
+              <form class="form-signin form-horizontal col-sm-4 col-sm-offset-4"  action="/sell" method="POST" enctype="multipart/form-data">
+          <h2 class="form-signin-heading text-center" style="color:Red">
+            Sell product
+          </h2>
+         
+
+        <div class="form-group">
+            <label class="sr-only">
+              About Product
+            </label>
+            <div >
+              <textarea name="info" rows="4" cols="70" class="form-control" placeholder="info" required value=""></textarea>
+            </div>
+        </div>
+     
+
+        <div class="form-group">
+            <label class="sr-only">
+              Price
+            </label>
+            <div >
+              <input type="text" name="price" class="form-control" placeholder="price"
+               required value="">
+            </div>
+        </div>
+
+        
+         <div class="form-group">
+            <label class="sr-only">
+              Quantity
+            </label>
+            <div >
+              <input type="text" name="quantity" class="form-control" placeholder="quantity"
+               required value="">
+            </div>
+        </div>
+
+        
+         <div class="form-group">
+            <label class="sr-only">
+              Image
+            </label>
+            <div >
+              <input type="file" name="fileToUpload"  class="form-control" required value="">
+                   <input type="submit" value="Upload Product" name="submit">
+            </div>
+        </div>
+        
+  </form>
+            </div>
+          </div>
+
+  </div>
+
+  <h2> Your Timeline </h2>
+
+  <h3>{{error}}</h3>
+
+<p><strong> your friends has posted --</strong></p>
+
+  {%for post in friendspost%}
+    <div>
+    <img src="/friendpic?eid={{post.email}}" class="img-responsive img-thumbnail">
+    <h2>{{post.name}} has shared this post at {{post.time}}</h2>
+    <p>{{post.shared_post}}</p><br>
+    <img src="/showsharedposts?pid={{post.key().id()}}" class="img-responsive img-thumbnail">
+
+    </div>
+
+  {%endfor%}
+
+ <p><strong> your friends want to sell --</strong></p>
+
+  {%if friendssell%}
+
+  {%for post in friendssell%}
+  {% if post %}
+    <div>
+    <img src="/friendpic?eid={{post.email}}" class="img-responsive img-thumbnail">
+    <h3>Your friend {{post.name}} wants to sell something</h3>
+    
+    <h3>{{post.sell_post}}<h3><br>
+    <h4>price {{post.price}}</h4><br>
+    <h4>quantity {{post.quantity}}</h4>
+    <img src="/showsellposts?pid={{post.key().id()}}" class="img-responsive img-thumbnail">
+    </div>
+  
+  {%endif%}
+  {%endfor%}
+
+  {%endif%}
+
+  <h3> People You May know</h3>
+ {%for f in youmayknow%}
+  <div>
+    <div class ="col-md-4">
+      <img src="/showfriends?pid={{f.key().id()}}" class="img-responsive img-thumbnail">
+    </div>
+  <h2>{{f.name}}</h2><br>
+</div>
+  
+  <form method="post">
+   <input type="submit" name="submit" value="follow {{f.email}}"> 
+   </form> 
+
+  {% endfor %}
+
+ 
+
+
+</body>
+</html>

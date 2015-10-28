@@ -1,0 +1,54 @@
+<html>
+<body>
+<a href="/logout">LOGOUT</a>
+<strong> You have this much new notifications </strong>
+
+<p><strong> your friends has posted --</strong></p>
+
+{%if friendspost%}
+{%for post in friendspost%}
+    <div>
+    <img src="/friendpic?eid={{post.email}}" class="img-responsive img-thumbnail">
+    <h2>{{post.name}} has shared something</h2>
+    </div>
+
+{%endfor%}
+{%endif%}
+
+</p>
+
+
+<p><strong> your friends want to sell --</strong></p>
+
+{%if friendssell%}
+
+{%for post in friendssell%}
+{% if post %}
+    <div>
+    <img src="/friendpic?eid={{post.email}}" class="img-responsive img-thumbnail">
+    <h3>Your friend {{post.name}} wants to sell something</h3>
+    
+    </div>
+  
+{%endif%}
+{%endfor%}
+
+{%endif%}
+
+</p>
+
+<p><strong> your order status --</strong></p>
+
+{%if yourorder%}
+{%for order in yourorder%}
+
+<div>
+<h2>your order {{order.product_id}} will be delivered by {{order.date_of_delivery}}
+</div>	
+
+{%endfor%}
+{%endif%}
+
+
+</body>	
+</html>

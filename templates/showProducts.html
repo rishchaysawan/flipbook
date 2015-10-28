@@ -1,0 +1,21 @@
+<html>
+<body>
+
+<a href="/logout">LOGOUT</a>
+<h2>here are the following items in this category-</h2>
+{%for c in sublist%}
+
+	<div>
+	<div >
+			<img src="/show?pid={{c.key().id()}}" class="img-responsive img-thumbnail">
+		</div>	
+	<a href="/product?pid={{c.key().id()}} "><h2>{{c.name}}<h2></a>	
+	</div>
+
+{%endfor%}
+
+
+
+
+</body>
+</html>
