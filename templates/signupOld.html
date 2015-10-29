@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login</title>
+	<meta charset="utf-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="assets/css/bootstrap.min.css"> 
+  	<script type="text/javascript" src="assets/js/jquery-2.1.4.min.js"></script>
+  	<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+  	<link href="assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
+  	<link href="assets/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+  	<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+	<div class="container">
+	    <form class="form-signin form-horizontal col-sm-4 col-sm-offset-4" method="POST" enctype="multipart/form-data">
+	        <h2 class="form-signin-heading text-center" style="color:yellow">
+	        	Become A Member
+	        </h2>
+	        <div class="form-group">
+		        <label class="sr-only">
+		        	Username
+		        </label>
+		        <div >
+		        	<input type="text" name="username" class="form-control" placeholder="Username" required value="{{name}}">
+		        </div>
+		    </div>
+		    <div class="form-group">
+		        <label class="sr-only">
+		        	Password
+		        </label>
+		        <div>
+		        	<input name="password" type="password" class="form-control" placeholder="Password" required value="{{password}}">
+		        </div>
+		    </div>
+		    <div class="form-group">
+		        <label class="sr-only">
+		        	Confirm Password
+		        </label>
+		        <div >
+		        	<input type="password" name="confirm_password" class="form-control" placeholder="confirm" required value="{{confirm}}" >
+		        </div>
+		        {{errorConfirm}}
+		    </div>
+		    <div class="form-group">
+		        <label class="sr-only">
+		        	Email
+		        </label>
+		        <div >
+		        	<input type="email" name="email" class="form-control" placeholder="Your Mail" required value="{{mail}}" >
+		        </div>
+		        {{userExists}}
+		    </div>
+		    <div class="form-group">
+		        <label class="sr-only">
+		        	Institution
+		        </label>
+		        <div >
+		        	<input type="text" name="institution" class="form-control" placeholder="Your Institution" required value="{{institution}}" >
+		        </div>
+		    </div>
+		    <div class="form-group">
+		        <label class="sr-only">
+		        	Profile Picture
+		        </label>
+		        <div >
+		        	<input type="file" name="fileToUpload" class="form-control" required value="{{'fileToUpload'}}">
+		        </div>
+		    </div>
+		    <div class="row">
+			    <div>    
+			        <button name="submit" class="btn btn-lg btn-info btn-block" type="submit">
+			        	Sign Up
+			        </button>
+			    </div>
+			</div>
+	      </form> 
+	</div>
+	<footer class="footer">
+    </footer>    
+</body>
+
+</html>

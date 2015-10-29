@@ -14,11 +14,8 @@ indexes:
   properties:
   - name: institution
   - name: email
-<<<<<<< HEAD
 
 - kind: Products
   properties:
   - name: brand
   - name: name
-=======
->>>>>>> fe5b75b4b5b3ede3af12c373d1952aa290b39426

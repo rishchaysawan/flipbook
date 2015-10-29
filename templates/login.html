@@ -1,14 +1,111 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>LOGIN</title>
-	<meta name="google-signin-scope" content="profile email">
-	<meta name="google-signin-client_id" content="298536639451-ags5lha49keu3mu0pv8j3kfjkegea4kd.apps.googleusercontent.com">
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	<title>Login/SignUp</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+ 	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="assets/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="assets/js/bootstrap-filestyle.min.js"> </script>
+	<style type="text/css">
+		input {
+			width: 55%; !important
+			margin-left: 15%;
+		}
+		.btn-file {
+		    position: relative;
+		    overflow: hidden;
+		    background: rgb(80,135,52);
+		    color: rgb(255,255,255);
+		}
+		.btn-file input[type=file] {
+		    position: absolute;
+		    top: 0;
+		    right: 0;
+		    min-width: 100%;
+		    min-height: 100%;
+		    font-size: 100px;
+		    text-align: right;
+		    filter: alpha(opacity=0);
+		    opacity: 0;
+		    outline: none;
+		    background: rgb(70,98,139);
+		    cursor: inherit;
+		    display: block;
+		}
+	</style>
 </head>
-<body>
-	<a href="loginEmail">LOGIN</a><br/>
-	<a href="signup">SIGNUP</a>
+<body class = "container" style = "width:50%; background-color: #F9EEFD;">
+	<div>
+		<div>
+			<ul class = "nav nav-pills" role = "tablist" id = "myTabs">
+				<li class = "active"><a href="#registration">Registration</a></li>
+				<li><a href="#login">Login</a></li>
+			</ul>
+		</div>
+		<div id="my-tab-content" class="tab-content">
+			<div id = "registration" class = "tab-pane active">
+				<h3>New user? Register yourself and open new ways to use amBook! Follow the following steps</h3><br><br>
+					<form>
+						<label>UserName</label>
+							<input type = "text" class = "form-control" name="username" placeholder="Username" required alue="{{name}}"><br>
 
+						<label>Password</label>
+							<input name="password" type="password" class="form-control" placeholder="Password" required value="{{password}}">
+
+						<label>Re-type Password</label>
+							<input type="password" name="confirm_password" class="form-control" placeholder="confirm" required value="{{confirm}}" >
+							<br/>
+							{{errorConfirm}}
+							<br/>
+
+						<label>E-mail Id</label>
+							<input type="email" name="email" class="form-control" placeholder="Your Mail" required value="{{mail}}" >
+							<br>
+							{{userExists}}
+							<br/>
+
+						<label>Institution</label>
+							<input type="text" name="institution" class="form-control" placeholder="Your Institution" required value="{{institution}}" >
+						
+						<div class = "well">
+						<label>Profile Picture</label>
+							<input type="file" name="fileToUpload" class="form-control" required value="{{'fileToUpload'}}">
+								
+						</div>
+
+						<button name="submit" class="btn btn-lg btn-info " type="submit" style = "float:right">
+				        	Sign Up
+				        </button>
+					</form>
+			</div>
+
+			<div id = "login" class = "tab-pane">
+				<h3>Welcome Back. Please login by entering the following credentials</h3><br><br>
+				<form>
+					<label>Username</label>
+						<input type="text" name="username" class="form-control" placeholder="Username" required value="{{name}}">
+						<br>
+						{{UserExists}}
+						<br/>
+						<br/>
+					<label>Password</label>
+						<input name="password" type="password" class="form-control" placeholder="Password" required value="{{password}}">
+						<br/>
+					<button name="submit" class="btn btn-lg btn-info" style = "float:right;" type="submit">
+					Log in
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>	
+
+	<script type="text/javascript">
+	$('#myTabs a').click(function (e) {
+	  e.preventDefault()
+	  $(this).tab('show')
+	})
+
+	</script>
 </body>
 </html>

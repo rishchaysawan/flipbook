@@ -12,11 +12,8 @@ from google.appengine.ext import db
 from google.appengine.api import urlfetch
 from google.appengine.api import users
 import datetime
-<<<<<<< HEAD
 import apriori
 
-=======
->>>>>>> fe5b75b4b5b3ede3af12c373d1952aa290b39426
 
 SECRET="qwerty"
 URL="https://www.googleapis.com/oauth2/v3/tokeninfo?id_token="
@@ -169,7 +166,6 @@ class Handler(webapp2.RequestHandler):
     def render(self,template,**kw):
         self.write(self.render_str(template,**kw))
 
-<<<<<<< HEAD
 def load_dataset():
 
     cursor=db.GqlQuery("select * from Transactions")
@@ -294,8 +290,6 @@ def rules_from_conseq(freqSet, H, support_data, rules, min_confidence=0.7):
 
 
 
-=======
->>>>>>> fe5b75b4b5b3ede3af12c373d1952aa290b39426
 
 class MainHandler(Handler):
     def get(self):
@@ -905,39 +899,25 @@ class ShowCart(Handler):
                         count+=1
                 greet='<a href="/profile">Hello, '+user.name+'</a>'
                 logout='<a href="/logout">LOGOUT</a>'
-<<<<<<< HEAD
-
                 email=user.email
-
-
-
                 cursor=db.GqlQuery("SELECT * FROM Cart WHERE email='%s'"%email)
                 inputitem=[]
                 for c in cursor:
                     pid=c.product_id.key().id()
                     inputitem.append(pid)
-
                 dataset=load_dataset()    
                 minsupport=0.5
                 min_confidence=0.5
                 l,support_data=apriori(dataset,minsupport)
                 rules=generateRules(l,support_data,min_confidence)
-
                 recommend=[]
                 ch=frozenset(inputitem)
-
                 for result in rules:
-                    #print result[0]
                     if result[0]==ch: 
                         for temp in list(result[1]):
                             if not temp in recommend:
                                 recommend.append(temp) 
-            
-    
                 self.render("cart.html",error="Empty Cart",count=count,greet=greet,logout=logout,cursor=cursor,user=user,total=total,recommend=recommend)
-=======
-                self.render("cart.html",error="Empty Cart",count=count,greet=greet,logout=logout,cursor=cursor,user=user,total=total)
->>>>>>> fe5b75b4b5b3ede3af12c373d1952aa290b39426
             else:
                 self.redirect("/login")
         else:
