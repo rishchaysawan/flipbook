@@ -46,7 +46,7 @@
 		<div id="my-tab-content" class="tab-content">
 			<div id = "registration" class = "tab-pane active">
 				<h3>New user? Register yourself and open new ways to use amBook! Follow the following steps</h3><br><br>
-					<form>
+					<form  method="POST" enctype="multipart/form-data" action="/signup">
 						<label>UserName</label>
 							<input type = "text" class = "form-control" name="username" placeholder="Username" required alue="{{name}}"><br>
 
@@ -82,7 +82,7 @@
 
 			<div id = "login" class = "tab-pane">
 				<h3>Welcome Back. Please login by entering the following credentials</h3><br><br>
-				<form>
+				<form method="POST" action="/loginEmail">
 					<label>Username</label>
 						<input type="text" name="username" class="form-control" placeholder="Username" required value="{{name}}">
 						<br>
