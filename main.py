@@ -6,6 +6,7 @@ import hmac
 import random
 import string
 import urllib2
+import urllib
 import json
 from time import gmtime, strftime
 from google.appengine.ext import db
@@ -13,13 +14,33 @@ from google.appengine.api import urlfetch
 from google.appengine.api import users
 import datetime
 import apriori
+import logging
+from xml.dom import minidom
 
 
 SECRET="qwerty"
-URL="https://www.googleapis.com/oauth2/v3/tokeninfo?id_token="
+#URL="https://www.googleapis.com/oauth2/v3/tokeninfo?id_token="
+urlReview="http://sentiment.vivekn.com/api/text/"
 
 template_dir=os.path.join(os.path.dirname(__file__),'templates')
 jinja_env=jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),autoescape=True)
+
+IP_URL="http://api.hostip.info/?ip="
+
+def get_coords(ip):
+    #ip="4.2.2.2"
+    #ip="23.24.209.141"
+    url=IP_URL+ip
+    try:
+        content=urllib2.urlopen(url).read()
+    except URLError:
+        return
+    if content:
+        d=minidom.parseString(content)
+        coords=d.getElementsByTagName('gml:coordinates')
+        if coords and coords[0].childNodes[0].nodeValue:
+            lon,lat=coords[0].childNodes[0].nodeValue.split(',')
+            return db.GeoPt(lat,lon)
 
 def make_salt():
     return "".join(random.choice(string.letters) for x in range (0,5))
@@ -55,6 +76,11 @@ def get_js(token):
     if content:
         dictionary=json.loads(content)
         return dictionary["name"],dictionary["email"]
+
+
+class Location(db.Model):
+    coords=db.GeoPtProperty()
+    ip=db.StringProperty()
 
 class Customer(db.Model):
     email=db.StringProperty(required=True)
@@ -110,6 +136,7 @@ class Bool_rating(db.Model):
     review=db.TextProperty(required=True)
     subject=db.TextProperty(required=True)
     time=db.DateTimeProperty(auto_now_add=True)
+    reviewType=db.BooleanProperty()
 
 class Query(db.Model):
     question=db.TextProperty(required=True)
@@ -823,6 +850,53 @@ class ProductHandler(Handler):
         q.put()
         self.redirect('/')
 
+
+class ReviewHandler(Handler):
+    def get(self):
+        self.redirect("/")
+    def post(self):
+        subject=self.request.get('subject')
+        review=self.request.get('review')
+        rating=int(self.request.get('rating'))
+        product_id=self.request.get('pid')
+        url="product?pid="+product_id
+        product_id=int(product_id)
+        product=Products.get_by_id(product_id)
+        user_id=self.request.cookies.get('user_id')
+        form_fields={"txt":review}
+        form_data = urllib.urlencode(form_fields)
+        result = urlfetch.fetch(url=urlReview,payload=form_data,method=urlfetch.POST, headers={'Content-Type': 'application/x-www-form-urlencoded'})
+        d=json.loads(result.content)
+        s=False
+        if d["result"]["sentiment"]=="Negative":
+            s=False
+        else:
+            s=True
+        reviewType=s
+        if user_id:
+            result=check_secure_val(user_id)
+            if result:
+                check=db.GqlQuery("SELECT * FROM Rating WHERE product_name='%s'"%product.name)
+                c=check.get()
+                if c:
+                    temp=(c.rating*c.count)+rating
+                    c.count+=1
+                    temp=temp/c.count
+                    c.rating=temp
+                    c.put()
+                else:
+                    temp=Rating(product_name=product.name,product_id=product.key(),count=1,rating=float(rating))
+                    temp.put()
+                cust=Customer.get_by_id(int(result))
+                review_by=cust.name
+                r=Bool_rating(review_by=review_by,rating=rating,review=review,subject=subject,customerId=cust.key(),product_id=product.key(),reviewType=reviewType)
+                r.put()
+                self.redirect("/%s"%url)
+            else:
+                self.redirect("/login")
+        else:
+            self.redirect("/login")
+
 class showProducts(Handler):
     def get(self):
         sublist=[]
@@ -999,6 +1073,13 @@ class Checkout(Handler):
                 temp=Transactions(transaction=cookies)
                 temp.put()
                 self.response.set_cookie('productBought','%s'%cookies,expires=datetime.datetime.now()+datetime.timedelta(365))
+                ip=str(self.request.remote_addr)
+                coords=get_coords(self.request.remote_addr)
+                c=db.GqlQuery("SELECT * FROM Location WHERE ip='%s'"%ip)
+                check=c.get()
+                if not check:
+                    a=Location(coords=coords,ip=ip)
+                    a.put()
                 self.redirect("/")
             else:
                 self.redirect("/")
@@ -1045,5 +1126,5 @@ app = webapp2.WSGIApplication([
     ('/answer',AnswerHandler),('/share',ShareHandler),('/showsharedposts',ShowsharedPosts),
     ('/showsellposts',ShowsellPosts),('/friendpic',FriendPic),('/notify',NotifyHandler),
     ('/showfriends',ShowFriends),('/showproducts',showProducts),('/showcart',ShowCart),('/checkout',Checkout),
-    ('/logout',LogoutHandler),('/profile',ProfileHandler),('/showprofilepic',ProfilePicHandler)
+    ('/logout',LogoutHandler),('/profile',ProfileHandler),('/showprofilepic',ProfilePicHandler),('/review',ReviewHandler)
 ], debug=True)
