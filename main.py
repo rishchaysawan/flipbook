@@ -343,7 +343,7 @@ class MainHandler(Handler):
                                         sugitems.append(product)
                                         templist.append(product.name)
                     l=len(sugitems)
-                    self.render("index.html",l=l,message=message,sugitems=sugitems,greet=greet,logout=logout)
+                    self.render("indexnew.html",l=l,message=message,sugitems=sugitems,greet=greet,logout=logout)
                 elif identity and myorder:
                     message="suggested items on basis of your order history"
                     identity=str(identity).split('|')[0]
@@ -376,7 +376,7 @@ class MainHandler(Handler):
                                         sugitems.append(product)
                                         templist.append(product.name)
                     l=len(sugitems)
-                    self.render("index.html",l=l,message=message,sugitems=sugitems,greet=greet,logout=logout)
+                    self.render("indexnew.html",l=l,message=message,sugitems=sugitems,greet=greet,logout=logout)
                 elif identity:
                     message="Your friends bought items"
                     identity=str(identity).split('|')[0]
@@ -398,10 +398,10 @@ class MainHandler(Handler):
                                         sugitems.append(product)
                                         templist.append(product.name)
                     l=len(sugitems)
-                    self.render("index.html",l=l,message=message,sugitems=sugitems,greet=greet,logout=logout)    
+                    self.render("indexnew.html",l=l,message=message,sugitems=sugitems,greet=greet,logout=logout)    
                 else:#This case may never be used
                     message='Connect with people on flipbook to get suggestions'
-                    self.render("index.html",l=0,message=message,sugitems=sugitems,greet=greet,logout=logout)
+                    self.render("indexnew.html",l=0,message=message,sugitems=sugitems,greet=greet,logout=logout)
             else:
                 greet='<a href="/login">login/signup</a>'
                 productidentity=self.request.cookies.get('productBought')
@@ -422,10 +422,10 @@ class MainHandler(Handler):
                                 templist.append(probrands.name)
                     message="Suggested items on basis of your history"
                     l=len(sugitems)
-                    self.render("index.html",l=l,message=message,sugitems=sugitems,greet=greet,logout=logout)
+                    self.render("indexnew.html",l=l,message=message,sugitems=sugitems,greet=greet,logout=logout)
                 else:
                     message='<a href="/login">Join Flipbook</a> & connect with people on flipbook to get suggestions'
-                    self.render("index.html",l=-1,message=message,sugitems=sugitems,greet=greet)
+                    self.render("indexnew.html",l=-1,message=message,sugitems=sugitems,greet=greet)
         else:
             greet='<a href="/login">login/signup</a>'
             productidentity=self.request.cookies.get('productBought')
@@ -446,10 +446,10 @@ class MainHandler(Handler):
                             templist.append(probrands.name)
                 message="Suggested items on basis of your history"
                 l=len(sugitems)
-                self.render("index.html",l=l,message=message,sugitems=sugitems,greet=greet)
+                self.render("indexnew.html",l=l,message=message,sugitems=sugitems,greet=greet)
             else:
                 message='<a href="/login">Join Flipbook</a> & connect with people on flipbook to get recommendations'
-                self.render("index.html",l=-1,message=message,sugitems=sugitems,greet=greet)
+                self.render("indexnew.html",l=-1,message=message,sugitems=sugitems,greet=greet)
 
     #NO POST handler required in index page since a new search page
     def post(self):
